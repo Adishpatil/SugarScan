@@ -1,0 +1,5 @@
+Healthy
+Mosaic
+RedRot
+Rust
+Yellow
