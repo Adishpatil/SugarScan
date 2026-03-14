@@ -8,7 +8,9 @@ A Flutter mobile app that detects sugarcane diseases using deep learning.
 - ?? Detects 5 conditions: Healthy, Mosaic, Rust, Red Rot, Yellow Leaf
 - ?? Confidence scores for all classes
 - ?? Scan history
-- ?? Disease info with treatment guidance- 100% offline
+- ?? Disease info with treatment guidance
+- ?? 100% offline
+
 ## Model
 - Architecture: EfficientNetB0
 - Dataset: 5 class sugarcane leaf dataset
