@@ -323,6 +323,83 @@ class _HomeTabState extends State<_HomeTab>
     }
   }
 
+  void _showInstructions(BuildContext context, ImageSource source) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).padding.bottom + 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.info_outline_rounded, color: AppColors.primary, size: 28),
+                const SizedBox(width: 12),
+                Text(
+                  S.howToScanTitle,
+                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            _buildInstructionRow('☀️', S.instruction2),
+            const SizedBox(height: 16),
+            _buildInstructionRow('📐', S.instruction1),
+            const SizedBox(height: 16),
+            _buildInstructionRow('🔍', S.instruction3),
+            const SizedBox(height: 16),
+            _buildInstructionRow('🍃', S.instruction4),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _pickImage(context, source);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
+                ),
+                child: Text(
+                  S.gotIt,
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInstructionRow(String emoji, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 24)),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              text,
+              style: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary, height: 1.5),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -348,7 +425,7 @@ class _HomeTabState extends State<_HomeTab>
                     label: S.takePhoto,
                     subtitle: S.takePhotoSub,
                     gradient: const [Color(0xFF2ECC71), Color(0xFF27AE60)],
-                    onTap: () => _pickImage(context, ImageSource.camera),
+                    onTap: () => _showInstructions(context, ImageSource.camera),
                     delay: 0.0,
                   ),
                   const SizedBox(height: 12),
@@ -357,7 +434,7 @@ class _HomeTabState extends State<_HomeTab>
                     label: S.chooseGallery,
                     subtitle: S.chooseGallerySub,
                     gradient: const [Color(0xFF1B4332), Color(0xFF2D6A4F)],
-                    onTap: () => _pickImage(context, ImageSource.gallery),
+                    onTap: () => _showInstructions(context, ImageSource.gallery),
                     delay: 0.1,
                   ),
 

@@ -101,6 +101,18 @@ class S {
       _l.t3("Quick Tips", "जल्दी टिप्स", "झटपट टिप्स");
   static String get currentRisk =>
       _l.t3("Current Risk", "अभी का खतरा", "सध्याचा धोका");
+  static String get howToScanTitle =>
+      _l.t3("How to Scan", "स्कैन कैसे करें", "स्कॅन कसे करावे");
+  static String get instruction1 =>
+      _l.t3("Place the leaf on a flat surface", "पत्ती को समतल सतह पर रखें", "पान सपाट पृष्ठभागावर ठेवा");
+  static String get instruction2 =>
+      _l.t3("Ensure good natural lighting", "अच्छी प्राकृतिक रोशनी सुनिश्चित करें", "चांगला नैसर्गिक प्रकाश सुनिश्चित करा");
+  static String get instruction3 =>
+      _l.t3("Keep the affected area in focus", "प्रभावित हिस्से को फोकस में रखें", "बाधित भाग फोकसमध्ये ठेवा");
+  static String get instruction4 =>
+      _l.t3("Take image of a single leaf, not the whole crop", "पूरे फसल की नहीं, बल्कि एक पत्ती की फोटो लें", "संपूर्ण पिकाचा नाही, तर एका पानाचा फोटो घ्या");
+  static String get gotIt =>
+      _l.t3("Got it, Let's Scan", "समझ गया, स्कैन करें", "समजले, स्कॅन करूया");
 
   // ── Result screen ──
   static String get detectionResult =>
