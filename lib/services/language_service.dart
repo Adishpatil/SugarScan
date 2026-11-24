@@ -151,6 +151,34 @@ class S {
   static String get goBack => _l.t3("Go Back", "वापस जाएं", "मागे जा");
   static String get shareResult =>
       _l.t3("Share Result", "परिणाम शेयर करें", "निकाल शेअर करा");
+  static String get lowConfidenceWarning => _l.t3(
+      "Low confidence - please retake the photo in good light with one leaf filling the frame.",
+      "कम भरोसा - अच्छी रोशनी में, एक पत्ते को पूरा फ्रेम में रखकर फिर से फोटो लें।",
+      "कमी खात्री - चांगल्या उजेडात एक पान पूर्ण दिसेल असा फोटो पुन्हा काढा.");
+  static String get imageNotRecognized => _l.t3(
+      "Couldn't identify this image",
+      "यह तस्वीर पहचान में नहीं आई",
+      "हा फोटो ओळखता आला नाही");
+  static String get ensureSugarcaneLeaf => _l.t3(
+      "Please make sure the photo shows a sugarcane leaf",
+      "कृपया पक्का करें कि फोटो में गन्ने का पत्ता है",
+      "फोटोमध्ये ऊसाचे पान आहे याची खात्री करा");
+  static String get retakePhoto =>
+      _l.t3("Retake photo", "फिर से फोटो लें", "पुन्हा फोटो काढा");
+  static String get chooseFromGallery =>
+      _l.t3("Choose from gallery", "गैलरी से चुनें", "गॅलरीतून निवडा");
+  static String get photoTipDaylight => _l.t3(
+      "Take the photo in daylight",
+      "दिन की रोशनी में फोटो लें",
+      "दिवसाच्या उजेडात फोटो काढा");
+  static String get photoTipSingleLeaf => _l.t3(
+      "Photograph one leaf",
+      "एक ही पत्ते की फोटो लें",
+      "एका पानाचाच फोटो घ्या");
+  static String get photoTipSteady => _l.t3(
+      "Hold the phone steady",
+      "फोन स्थिर रखें",
+      "फोन स्थिर धरून ठेवा");
 
   // ── History tab ──
   static String get scanHistory =>

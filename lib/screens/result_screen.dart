@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,12 +65,17 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   Future<void> _saveToHistory() async {
-    if (_result == null || _saved) return;
+    if (_result == null ||
+        _saved ||
+        _result!.confidenceLevel == ConfidenceLevel.rejected) {
+      return;
+    }
     final box = Hive.box('history');
     await box.add({
       'id': const Uuid().v4(),
       'label': _result!.label,
       'confidence': _result!.confidence,
+      'confidenceLevel': _result!.confidenceLevel.name,
       'imagePath': widget.imageFile.path,
       'timestamp': DateTime.now().toIso8601String(),
     });
@@ -241,6 +247,10 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   Widget _buildResult() {
+    if (_result!.confidenceLevel == ConfidenceLevel.rejected) {
+      return _buildRejectedResult();
+    }
+
     final info = diseaseDatabase[_result!.label]!;
     final color = info.color;
     final pct = (_result!.confidence * 100).toStringAsFixed(1);
@@ -252,6 +262,10 @@ class _ResultScreenState extends State<ResultScreen>
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         child: Column(
           children: [
+            if (_result!.confidenceLevel == ConfidenceLevel.low) ...[
+              _buildLowConfidenceWarning(),
+              const SizedBox(height: 16),
+            ],
             // ── Image ──
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
@@ -309,6 +323,144 @@ class _ResultScreenState extends State<ResultScreen>
             const SizedBox(height: 20),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLowConfidenceWarning() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.amber.withOpacity(0.14),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.amber.shade700.withOpacity(0.5)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.warning_amber_rounded, color: Colors.amber.shade800),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              S.lowConfidenceWarning,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: AppColors.textPrimary,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRejectedResult() {
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.image_search_rounded,
+                color: AppColors.primary,
+                size: 56,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              S.imageNotRecognized,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: 21,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              S.ensureSugarcaneLeaf,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 15,
+                color: AppColors.textMuted,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _buildPhotoTip(Icons.wb_sunny_rounded, S.photoTipDaylight),
+            _buildPhotoTip(Icons.spa_rounded, S.photoTipSingleLeaf),
+            _buildPhotoTip(Icons.phone_android_rounded, S.photoTipSteady),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _pickReplacementImage(ImageSource.camera),
+                icon: const Icon(Icons.camera_alt_rounded),
+                label: Text(S.retakePhoto),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _pickReplacementImage(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_rounded),
+                label: Text(S.chooseFromGallery),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary, width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhotoTip(IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickReplacementImage(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 95,
+    );
+    if (picked == null || !mounted) return;
+    await Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(imageFile: File(picked.path)),
       ),
     );
   }

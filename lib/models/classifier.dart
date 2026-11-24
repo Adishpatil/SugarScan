@@ -19,11 +19,22 @@ import "package:tflite_flutter/tflite_flutter.dart";
 import "package:image/image.dart" as img;
 
 // ── Result DTO ──────────────────────────────────────────────
+enum ConfidenceLevel { high, low, rejected }
+
+const double highConfidence = 0.70;
+const double minConfidence = 0.50;
+
 class ClassifierResult {
   final String label;
   final double confidence;
   final Map<String, double> allProbabilities;
   final String debugInfo;
+
+  ConfidenceLevel get confidenceLevel {
+    if (confidence >= highConfidence) return ConfidenceLevel.high;
+    if (confidence >= minConfidence) return ConfidenceLevel.low;
+    return ConfidenceLevel.rejected;
+  }
 
   ClassifierResult({
     required this.label,

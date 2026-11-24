@@ -20,3 +20,5 @@ A Flutter mobile app that detects sugarcane diseases using deep learning.
 - Flutter 3.19.6
 - TFLite Flutter 0.12.0
 - Hive (local storage)
+
+Low-confidence images are rejected; a dedicated NotSugarcane class is planned for v1.5.
